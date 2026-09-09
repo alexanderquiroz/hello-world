@@ -24,7 +24,7 @@
       <div>
         <span class="eyebrow">BD_DGIC_COMPROMISOS</span>
         <h2>Panel ejecutivo</h2>
-        <p class="hero-copy">Los indicadores reflejan la información normalizada disponible. “Evidencia ejecutada” no equivale por sí sola a conformidad contractual.</p>
+        <p class="hero-copy">Los indicadores reflejan la información normalizada disponible. Una localidad reemplazada no implica reducción del compromiso: la obligación se mantiene mediante una nueva localidad de reemplazo. “Evidencia ejecutada” no equivale por sí sola a conformidad contractual.</p>
       </div>
       <div class="snapshot"><span>Última consulta</span><strong id="lastUpdated">—</strong></div>
     </section>
@@ -47,22 +47,22 @@
 
     <section id="tab-resumen" class="tab-pane active">
       <div class="kpi-grid">
-        <article class="kpi-card"><span>Total compromisos</span><strong id="kpiTotal">—</strong><small>Obligaciones normalizadas</small></article>
-        <article class="kpi-card"><span>No retirados</span><strong id="kpiNoRet">—</strong><small>Excluye retirados</small></article>
+        <article class="kpi-card"><span>Compromisos vigentes</span><strong id="kpiTotal">—</strong><small>Excluye localidades originales reemplazadas</small></article>
+        <article class="kpi-card"><span>Localidades reemplazadas</span><strong id="kpiNoRet">—</strong><small>Mismo número de nuevas por reemplazo</small></article>
         <article class="kpi-card"><span>Evidencia ejecutada</span><strong id="kpiExec">—</strong><small id="kpiPct">—</small></article>
-        <article class="kpi-card"><span>Localidades</span><strong id="kpiLoc">—</strong><small>Referenciadas</small></article>
+        <article class="kpi-card"><span>Localidades vigentes</span><strong id="kpiLoc">—</strong><small>Referenciadas</small></article>
         <article class="kpi-card"><span>Entidades</span><strong id="kpiEnt">—</strong><small>Beneficiarias</small></article>
         <article class="kpi-card"><span>Kilómetros</span><strong id="kpiKm">—</strong><small>Comprometidos</small></article>
-        <article class="kpi-card"><span>Población</span><strong id="kpiPob">—</strong><small>Población-compromiso</small></article>
+        <article class="kpi-card"><span>Población</span><strong id="kpiPob">—</strong><small>Población-compromiso vigente</small></article>
         <article class="kpi-card"><span>Accesos</span><strong id="kpiAcc">—</strong><small>Comprometidos</small></article>
       </div>
 
       <div class="chart-grid">
-        <article class="chart-card"><div class="card-head"><div><h3>Compromisos por operador</h3><p>Distribución según filtros activos.</p></div></div><div class="chart-wrap"><canvas id="chartOperador"></canvas></div></article>
-        <article class="chart-card"><div class="card-head"><div><h3>Estado BI</h3><p>Clasificación analítica.</p></div></div><div class="chart-wrap"><canvas id="chartEstado"></canvas></div></article>
-        <article class="chart-card wide"><div class="card-head"><div><h3>Compromisos por departamento</h3><p>Los 25 departamentos del catálogo.</p></div></div><div class="chart-wrap tall"><canvas id="chartDepartamento"></canvas></div></article>
-        <article class="chart-card"><div class="card-head"><div><h3>Distribución por periodo</h3><p>Años contractuales disponibles.</p></div></div><div class="chart-wrap"><canvas id="chartPeriodo"></canvas></div></article>
-        <article class="chart-card"><div class="card-head"><div><h3>Tecnologías</h3><p>Un compromiso puede tener más de una.</p></div></div><div class="chart-wrap"><canvas id="chartTecnologia"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Compromisos vigentes por operador</h3><p>Distribución según filtros activos.</p></div></div><div class="chart-wrap"><canvas id="chartOperador"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Estado BI</h3><p>Incluye localidades reemplazadas como categoría histórica.</p></div></div><div class="chart-wrap"><canvas id="chartEstado"></canvas></div></article>
+        <article class="chart-card wide"><div class="card-head"><div><h3>Compromisos vigentes por departamento</h3><p>Los 25 departamentos del catálogo.</p></div></div><div class="chart-wrap tall"><canvas id="chartDepartamento"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Compromisos vigentes por periodo</h3><p>Años contractuales disponibles.</p></div></div><div class="chart-wrap"><canvas id="chartPeriodo"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Tecnologías en compromisos vigentes</h3><p>Un compromiso puede tener más de una.</p></div></div><div class="chart-wrap"><canvas id="chartTecnologia"></canvas></div></article>
       </div>
     </section>
 
