@@ -6,56 +6,58 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Dashboard de Compromisos DGIC</title>
 <link rel="stylesheet" href="./ui-v3.css">
+<link rel="stylesheet" href="./ui-polish.css?v=3.1">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 <a class="skip" href="#main">Ir al contenido</a>
 <header class="topbar">
- <div class="brand"><div class="brand-icon" aria-hidden="true">◉</div><div><h1>Dashboard de Compromisos DGIC</h1><p>Seguimiento de compromisos de telecomunicaciones · Proyecto académico</p></div></div>
- <div class="session"><span id="connection" role="status">Conectando…</span><button class="btn inverse" id="loginButton">Iniciar sesión</button><button class="btn inverse" id="logoutButton" hidden>Cerrar sesión</button></div>
+ <div class="brand"><div class="brand-icon" data-icon="antenna" aria-hidden="true"></div><div><h1>Dashboard de Compromisos DGIC</h1><p>Seguimiento de compromisos de telecomunicaciones · Proyecto académico</p></div></div>
+ <div class="session"><span class="session-identity"><span data-icon="user" aria-hidden="true"></span><strong id="sessionLabel">Resumen público</strong></span><span id="connection" role="status">Conectando…</span><button class="btn inverse" id="loginButton"><span data-icon="lock" aria-hidden="true"></span><span>Iniciar sesión</span></button><button class="btn inverse" id="logoutButton" hidden><span data-icon="exit" aria-hidden="true"></span><span>Cerrar sesión</span></button></div>
 </header>
 <nav id="projectTabs" class="project-tabs" aria-label="Fuentes de información"></nav>
 <div class="layout">
  <aside class="sidebar" aria-label="Filtros del proyecto">
-  <div class="sidebar-head"><h2>Filtros</h2><button id="clearFilters" class="link">Limpiar</button></div>
+  <div class="sidebar-head"><h2><span data-icon="filter" aria-hidden="true"></span>Filtros</h2><button id="clearFilters" class="link"><span data-icon="refresh" aria-hidden="true"></span>Limpiar</button></div>
   <p class="side-help">Marca una o varias opciones. Los filtros se conservan por pestaña.</p>
   <div id="filters"></div>
-  <div class="apply-box"><button class="btn primary" id="applyFilters">Aplicar filtros</button><small id="filterMessage" aria-live="polite"></small></div>
+  <div class="apply-box"><button class="btn primary" id="applyFilters"><span data-icon="filter" aria-hidden="true"></span>Aplicar filtros</button><small id="filterMessage" aria-live="polite"></small></div>
  </aside>
  <main id="main" class="content">
   <section class="module-head">
-   <div><span class="eyebrow">BD_DGIC_COMPROMISOS · DATOS REALES</span><h2 id="moduleTitle">3.5 GHz-COI</h2><p id="moduleDescription"></p></div>
-   <div class="head-right"><div class="segmented" role="group" aria-label="Modo de análisis"><button data-view="project" aria-pressed="true" class="active">Ver por proyecto</button><button data-view="operator" aria-pressed="false">Ver por operador</button></div><div class="updated">Datos preparados: <time id="snapshot">—</time><button id="refresh" class="link" aria-label="Volver a consultar">↻</button></div></div>
+   <div><span class="eyebrow">BD_DGIC_COMPROMISOS · DATOS REALES</span><div class="module-heading"><span id="moduleIcon" class="module-icon" aria-hidden="true"></span><h2 id="moduleTitle">3.5 GHz-COI</h2></div><p id="moduleDescription"></p></div>
+   <div class="head-right"><div class="segmented" role="group" aria-label="Modo de análisis"><button data-view="project" aria-pressed="true" class="active"><span data-icon="layers" aria-hidden="true"></span>Ver por proyecto</button><button data-view="operator" aria-pressed="false"><span data-icon="users" aria-hidden="true"></span>Ver por operador</button></div><div class="updated"><span data-icon="calendar" aria-hidden="true"></span>Datos preparados: <time id="snapshot">—</time><button id="refresh" class="link" aria-label="Volver a consultar"><span data-icon="refresh" aria-hidden="true"></span></button></div></div>
   </section>
-  <div id="contextNote" class="context-note"></div>
+  <div class="context-note"><span data-icon="info" aria-hidden="true"></span><span id="contextNote"></span></div>
   <div id="errorBox" class="error" role="alert" hidden></div>
   <div id="loading" class="loading" role="status" hidden>Consultando Supabase…</div>
-  <div id="c4Gate" class="gate" hidden><strong>Planta C4: acceso con sesión</strong><p>Los reportes de ejecución se consultan de forma independiente. No se suman como nuevos compromisos.</p><button class="btn primary open-login">Iniciar sesión</button></div>
+  <div id="c4Gate" class="gate" hidden><strong>Planta C4: acceso con sesión</strong><p>Los reportes de ejecución se consultan de forma independiente. No se suman como nuevos compromisos.</p><button class="btn primary open-login"><span data-icon="lock" aria-hidden="true"></span>Iniciar sesión</button></div>
   <div id="results">
    <section id="kpis" class="kpis" aria-label="Indicadores"></section>
    <div id="meta" class="meta"></div>
    <section class="visual-grid">
     <article class="card"><div class="card-head"><h3 id="operatorTitle">Compromisos vigentes por operador</h3><p id="operatorSubtitle"></p></div><div id="operatorChart" class="bar-chart"></div></article>
     <article class="card"><div class="card-head"><h3 id="stateTitle">Estado registrado</h3><p>Se conserva la clasificación disponible en la fuente.</p></div><div id="stateChart"></div></article>
-    <article class="card map-card"><div class="card-head map-head"><div><h3>Distribución geográfica</h3><p id="mapSubtitle">Ubicaciones del detalle de la página actual.</p></div><button id="fitMap" class="link">Centrar</button></div><div id="map"><div class="map-placeholder">Inicia sesión para consultar las coordenadas del detalle.</div></div><small id="mapNote" class="map-note"></small></article>
+    <article class="card map-card"><div class="card-head map-head"><div><h3><span data-icon="map" aria-hidden="true"></span>Distribución geográfica</h3><p id="mapSubtitle">Ubicaciones del detalle de la página actual.</p></div><button id="fitMap" class="link"><span data-icon="pin" aria-hidden="true"></span>Centrar</button></div><div id="map"><div class="map-placeholder">Inicia sesión para consultar las coordenadas del detalle.</div></div><small id="mapNote" class="map-note"></small></article>
    </section>
    <section class="card detail-card">
     <div class="detail-head"><div><h3 id="detailTitle">Detalle</h3><p id="detailDescription"></p></div><div id="detailMode" class="segmented compact" hidden><button data-detail="commitments" class="active">Compromisos</button><button data-detail="segments">Segmentos</button></div></div>
-    <div class="toolbar"><form id="searchForm" role="search"><label class="sr-only" for="search">Buscar en los registros</label><input id="search" type="search" maxlength="150" placeholder="Buscar localidad, entidad, contrato o código…"><button class="btn" type="submit">Buscar</button></form><div class="exports"><button id="exportPage" class="btn" disabled>Descargar página</button><button id="exportSelected" class="btn" disabled>Descargar selección</button></div></div>
-    <div id="detailGate" class="gate"><strong>Detalle protegido</strong><p>El resumen es público. Los registros completos y sus coordenadas requieren una sesión de Supabase Auth.</p><button class="btn primary open-login">Iniciar sesión</button></div>
-    <div id="detailArea" hidden><div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div><div class="pager"><span id="rowCount" aria-live="polite"></span><span id="selectionCount"></span><div><button id="previous" class="btn">Anterior</button><span id="pageNumber">1</span><button id="next" class="btn">Siguiente</button></div></div></div>
+    <div class="toolbar"><form id="searchForm" role="search"><label class="sr-only" for="search">Buscar en los registros</label><input id="search" type="search" maxlength="150" placeholder="Buscar localidad, entidad, contrato o código…"><button class="btn" type="submit"><span data-icon="search" aria-hidden="true"></span>Buscar</button></form><div class="exports"><button id="exportPage" class="btn" disabled><span data-icon="download" aria-hidden="true"></span>Descargar página</button><button id="exportSelected" class="btn" disabled><span data-icon="download" aria-hidden="true"></span>Descargar selección</button></div></div>
+    <div id="detailGate" class="gate"><strong>Detalle protegido</strong><p>El resumen es público. Los registros completos y sus coordenadas requieren una sesión de Supabase Auth.</p><button class="btn primary open-login"><span data-icon="lock" aria-hidden="true"></span>Iniciar sesión</button></div>
+    <div id="detailArea" hidden><div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div><div class="pager"><span id="rowCount" aria-live="polite"></span><span id="selectionCount"></span><div><button id="previous" class="btn"><span data-icon="chevronLeft" aria-hidden="true"></span>Anterior</button><span id="pageNumber">1</span><button id="next" class="btn">Siguiente<span data-icon="chevronRight" aria-hidden="true"></span></button></div></div></div>
    </section>
    <details class="card breakdown"><summary>Distribución territorial y por periodo</summary><div class="secondary-grid"><div><h3>Por departamento</h3><div id="departmentChart" class="bar-chart"></div></div><div><h3 id="periodTitle">Por periodo contractual</h3><div id="periodChart" class="bar-chart"></div></div></div></details>
   </div>
-  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 3.0 · Supabase</span></footer>
+  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 3.1 · Iconos SVG · Supabase</span></footer>
  </main>
 </div>
-<dialog id="loginDialog"><form id="loginForm" class="dialog-body"><div class="dialog-head"><h2>Acceso al detalle</h2><button type="button" class="btn close-dialog" aria-label="Cerrar">×</button></div><p>Usa una cuenta de esta aplicación en Supabase Auth. No uses la contraseña de PostgreSQL, GitHub o Render.</p><label>Correo<input id="email" type="email" autocomplete="username" required></label><label>Contraseña<input id="password" type="password" autocomplete="current-password" required></label><label class="remember"><input type="checkbox" id="remember">Conservar la sesión en esta pestaña</label><small>En un equipo compartido, deja esta casilla desmarcada y cierra sesión al terminar.</small><p id="loginError" class="login-error" role="alert"></p><button class="btn primary" id="submitLogin">Entrar</button></form></dialog>
-<dialog id="recordDialog" class="record-dialog"><div class="dialog-body"><div class="dialog-head"><h2>Ficha del registro</h2><button class="btn close-dialog" aria-label="Cerrar">×</button></div><div id="recordFields"></div></div></dialog>
+<dialog id="loginDialog"><form id="loginForm" class="dialog-body"><div class="dialog-head"><h2><span data-icon="lock" aria-hidden="true"></span>Acceso al detalle</h2><button type="button" class="btn close-dialog" aria-label="Cerrar"><span data-icon="close" aria-hidden="true"></span></button></div><p>Ingresa tu usuario autorizado y la contraseña de esta aplicación. No uses las credenciales de PostgreSQL, GitHub o Render.</p><label for="username">Usuario</label><div class="input-with-icon"><span data-icon="user" aria-hidden="true"></span><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="DGIC" maxlength="254" required></div><label for="password">Contraseña</label><div class="input-with-icon password-field"><span data-icon="lock" aria-hidden="true"></span><input id="password" name="password" type="password" autocomplete="current-password" required><button type="button" id="togglePassword" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false"><span data-icon="eye" aria-hidden="true"></span></button></div><label class="remember"><input type="checkbox" id="remember">Conservar la sesión en esta pestaña</label><small>En un equipo compartido, deja esta casilla desmarcada y cierra sesión al terminar.</small><p id="loginError" class="login-error" role="alert"></p><button class="btn primary" id="submitLogin"><span data-icon="lock" aria-hidden="true"></span>Entrar</button></form></dialog>
+<dialog id="recordDialog" class="record-dialog"><div class="dialog-body"><div class="dialog-head"><h2>Ficha del registro</h2><button class="btn close-dialog" aria-label="Cerrar"><span data-icon="close" aria-hidden="true"></span></button></div><div id="recordFields"></div></div></dialog>
 <noscript><p class="error">Esta aplicación necesita JavaScript para consultar los indicadores.</p></noscript>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./config.js"></script>
-<script src="./ui-v3.js"></script>
+<script src="./ui-branding.js?v=3.1"></script>
+<script src="./ui-v3.1.js?v=3.1"></script>
 </body>
 </html>
