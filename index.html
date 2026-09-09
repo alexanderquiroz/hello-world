@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Dashboard DGIC - Compromisos de telecomunicaciones" />
+  <title>DGIC | Compromisos de Telecomunicaciones</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">DGIC</div>
+      <div><h1>Compromisos de Telecomunicaciones</h1><p>Seguimiento consolidado · PostgreSQL + Supabase</p></div>
+    </div>
+    <div class="top-actions">
+      <span id="dataStatus" class="status-chip"><span class="status-dot"></span><span>Cargando</span></span>
+      <button id="authButton" class="btn btn-outline">Iniciar sesión</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero-row">
+      <div>
+        <span class="eyebrow">BD_DGIC_COMPROMISOS</span>
+        <h2>Panel ejecutivo</h2>
+        <p class="hero-copy">Los indicadores reflejan la información normalizada disponible. “Evidencia ejecutada” no equivale por sí sola a conformidad contractual.</p>
+      </div>
+      <div class="snapshot"><span>Última consulta</span><strong id="lastUpdated">—</strong></div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="resumen">Resumen</button>
+      <button class="tab" data-tab="compromisos">Compromisos</button>
+      <button class="tab" data-tab="vial">Tramos viales</button>
+      <button class="tab" data-tab="c4">Planta C4</button>
+    </nav>
+
+    <section class="filter-panel">
+      <div class="filter-panel-head">
+        <div><h3>Filtros</h3><p>Selección múltiple y filtros dependientes.</p></div>
+        <div class="filter-actions"><button id="clearFilters" class="btn btn-ghost">Limpiar</button><button id="applyFilters" class="btn btn-primary">Aplicar</button></div>
+      </div>
+      <div class="search-row"><label class="search-box"><span>Buscar</span><input id="freeSearch" type="search" placeholder="Localidad, entidad, contrato, corredor..." /></label></div>
+      <div id="filterGrid" class="filter-grid"></div>
+    </section>
+
+    <section id="tab-resumen" class="tab-pane active">
+      <div class="kpi-grid">
+        <article class="kpi-card"><span>Total compromisos</span><strong id="kpiTotal">—</strong><small>Obligaciones normalizadas</small></article>
+        <article class="kpi-card"><span>No retirados</span><strong id="kpiNoRet">—</strong><small>Excluye retirados</small></article>
+        <article class="kpi-card"><span>Evidencia ejecutada</span><strong id="kpiExec">—</strong><small id="kpiPct">—</small></article>
+        <article class="kpi-card"><span>Localidades</span><strong id="kpiLoc">—</strong><small>Referenciadas</small></article>
+        <article class="kpi-card"><span>Entidades</span><strong id="kpiEnt">—</strong><small>Beneficiarias</small></article>
+        <article class="kpi-card"><span>Kilómetros</span><strong id="kpiKm">—</strong><small>Comprometidos</small></article>
+        <article class="kpi-card"><span>Población</span><strong id="kpiPob">—</strong><small>Población-compromiso</small></article>
+        <article class="kpi-card"><span>Accesos</span><strong id="kpiAcc">—</strong><small>Comprometidos</small></article>
+      </div>
+
+      <div class="chart-grid">
+        <article class="chart-card"><div class="card-head"><div><h3>Compromisos por operador</h3><p>Distribución según filtros activos.</p></div></div><div class="chart-wrap"><canvas id="chartOperador"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Estado BI</h3><p>Clasificación analítica.</p></div></div><div class="chart-wrap"><canvas id="chartEstado"></canvas></div></article>
+        <article class="chart-card wide"><div class="card-head"><div><h3>Compromisos por departamento</h3><p>Los 25 departamentos del catálogo.</p></div></div><div class="chart-wrap tall"><canvas id="chartDepartamento"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Distribución por periodo</h3><p>Años contractuales disponibles.</p></div></div><div class="chart-wrap"><canvas id="chartPeriodo"></canvas></div></article>
+        <article class="chart-card"><div class="card-head"><div><h3>Tecnologías</h3><p>Un compromiso puede tener más de una.</p></div></div><div class="chart-wrap"><canvas id="chartTecnologia"></canvas></div></article>
+      </div>
+    </section>
+
+    <section id="tab-compromisos" class="tab-pane">
+      <div class="section-head"><div><h3>Detalle de compromisos</h3><p>Requiere autenticación.</p></div><button class="btn btn-outline export-btn" data-export="compromisos">Exportar página CSV</button></div>
+      <div id="detailGate" class="gate-card"><strong>Detalle protegido</strong><p>Inicia sesión para consultar los compromisos completos.</p><button class="btn btn-primary open-login">Iniciar sesión</button></div>
+      <div id="detailArea" class="hidden">
+        <div class="table-shell"><table><thead><tr><th>ID</th><th>Fuente</th><th>Operador</th><th>Contrato</th><th>Año</th><th>Departamento</th><th>Objeto</th><th>Tecnología</th><th>Estado</th><th></th></tr></thead><tbody id="detailBody"></tbody></table></div>
+        <div class="pager"><button id="detailPrev" class="btn btn-ghost">Anterior</button><span id="detailPage">Página 1</span><button id="detailNext" class="btn btn-ghost">Siguiente</button></div>
+      </div>
+    </section>
+
+    <section id="tab-vial" class="tab-pane">
+      <div class="section-head"><div><h3>Segmentos viales</h3><p>719 filas técnicas preservadas.</p></div><button class="btn btn-outline export-btn" data-export="vial">Exportar página CSV</button></div>
+      <div id="vialGate" class="gate-card"><strong>Detalle protegido</strong><p>Inicia sesión para consultar los segmentos.</p><button class="btn btn-primary open-login">Iniciar sesión</button></div>
+      <div id="vialArea" class="hidden">
+        <div class="table-shell"><table><thead><tr><th>Segmento</th><th>Operador</th><th>Año</th><th>Departamento</th><th>Tramo</th><th>Km</th><th>Configuración</th><th>Repetición</th><th></th></tr></thead><tbody id="vialBody"></tbody></table></div>
+        <div class="pager"><button id="vialPrev" class="btn btn-ghost">Anterior</button><span id="vialPage">Página 1</span><button id="vialNext" class="btn btn-ghost">Siguiente</button></div>
+      </div>
+    </section>
+
+    <section id="tab-c4" class="tab-pane">
+      <div class="section-head"><div><h3>Planta reportada C4</h3><p>11,025 filas de evidencia.</p></div><button class="btn btn-outline export-btn" data-export="c4">Exportar página CSV</button></div>
+      <div id="c4Gate" class="gate-card"><strong>Detalle protegido</strong><p>Inicia sesión para consultar C4.</p><button class="btn btn-primary open-login">Iniciar sesión</button></div>
+      <div id="c4Area" class="hidden">
+        <div class="table-shell"><table><thead><tr><th>Fila</th><th>Anexo</th><th>Entidad</th><th>Sector</th><th>Tecnología</th><th>Estado</th><th>Operador</th><th>Match</th><th></th></tr></thead><tbody id="c4Body"></tbody></table></div>
+        <div class="pager"><button id="c4Prev" class="btn btn-ghost">Anterior</button><span id="c4Page">Página 1</span><button id="c4Next" class="btn btn-ghost">Siguiente</button></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="loginDialog" class="modal"><form class="modal-card" id="loginForm"><div class="modal-head"><div><span class="eyebrow">Acceso protegido</span><h3>Iniciar sesión</h3></div><button type="button" class="icon-btn" id="closeLogin">×</button></div><label>Correo electrónico<input id="loginEmail" type="email" autocomplete="email" required /></label><label>Contraseña<input id="loginPassword" type="password" autocomplete="current-password" required /></label><p id="loginError" class="form-error"></p><button type="submit" class="btn btn-primary full">Entrar</button></form></dialog>
+  <dialog id="recordDialog" class="modal record-modal"><div class="modal-card"><div class="modal-head"><div><span class="eyebrow">Registro completo</span><h3 id="recordTitle">Detalle</h3></div><button type="button" class="icon-btn" id="closeRecord">×</button></div><div id="recordContent" class="record-grid"></div></div></dialog>
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="./config.js"></script><script src="./app.js"></script>
+</body>
+</html>
