@@ -7,6 +7,8 @@
 <title>Dashboard de Compromisos DGIC</title>
 <link rel="stylesheet" href="./ui-v3.css">
 <link rel="stylesheet" href="./ui-polish.css?v=3.1">
+<link rel="stylesheet" href="./ui-operators.css?v=3.2">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
@@ -15,6 +17,10 @@
  <div class="brand"><div class="brand-icon" data-icon="antenna" aria-hidden="true"></div><div><h1>Dashboard de Compromisos DGIC</h1><p>Seguimiento de compromisos de telecomunicaciones · Proyecto académico</p></div></div>
  <div class="session"><span class="session-identity"><span data-icon="user" aria-hidden="true"></span><strong id="sessionLabel">Resumen público</strong></span><span id="connection" role="status">Conectando…</span><button class="btn inverse" id="loginButton"><span data-icon="lock" aria-hidden="true"></span><span>Iniciar sesión</span></button><button class="btn inverse" id="logoutButton" hidden><span data-icon="exit" aria-hidden="true"></span><span>Cerrar sesión</span></button></div>
 </header>
+<section id="operatorToolbar" class="operator-toolbar" aria-label="Selección de operadores" hidden>
+ <div class="operator-selector"><div class="operator-selection-head"><h2>Operador <span>(selecciona uno o más)</span></h2><div id="operatorSelectionActions"></div></div><div id="operatorCards" class="operator-cards"></div></div>
+ <div class="operator-view-actions"><div class="segmented"><button data-view="operator"><span data-icon="users" aria-hidden="true"></span>Vista por operador</button><button data-view="project"><span data-icon="layers" aria-hidden="true"></span>Vista por proyecto</button></div><p><span data-icon="info" aria-hidden="true"></span>Selecciona empresas y después el proyecto. «Todos los proyectos» reúne las cinco fuentes contractuales; Planta C4 se analiza aparte.</p></div>
+</section>
 <nav id="projectTabs" class="project-tabs" aria-label="Fuentes de información"></nav>
 <div class="layout">
  <aside class="sidebar" aria-label="Filtros del proyecto">
@@ -33,12 +39,15 @@
   <div id="loading" class="loading" role="status" hidden>Consultando Supabase…</div>
   <div id="c4Gate" class="gate" hidden><strong>Planta C4: acceso con sesión</strong><p>Los reportes de ejecución se consultan de forma independiente. No se suman como nuevos compromisos.</p><button class="btn primary open-login"><span data-icon="lock" aria-hidden="true"></span>Iniciar sesión</button></div>
   <div id="results">
+   <section id="operatorBanner" class="operator-banner" hidden aria-live="polite"></section>
    <section id="kpis" class="kpis" aria-label="Indicadores"></section>
    <div id="meta" class="meta"></div>
    <section class="visual-grid">
-    <article class="card"><div class="card-head"><h3 id="operatorTitle">Compromisos vigentes por operador</h3><p id="operatorSubtitle"></p></div><div id="operatorChart" class="bar-chart"></div></article>
-    <article class="card"><div class="card-head"><h3 id="stateTitle">Estado registrado</h3><p>Se conserva la clasificación disponible en la fuente.</p></div><div id="stateChart"></div></article>
-    <article class="card map-card"><div class="card-head map-head"><div><h3><span data-icon="map" aria-hidden="true"></span>Distribución geográfica</h3><p id="mapSubtitle">Ubicaciones del detalle de la página actual.</p></div><button id="fitMap" class="link"><span data-icon="pin" aria-hidden="true"></span>Centrar</button></div><div id="map"><div class="map-placeholder">Inicia sesión para consultar las coordenadas del detalle.</div></div><small id="mapNote" class="map-note"></small></article>
+    <article class="card operator-project-chart" id="operatorCard"><div class="card-head"><h3 id="operatorTitle">Compromisos vigentes por operador</h3><p id="operatorSubtitle"></p></div><div id="operatorChart" class="bar-chart"></div></article>
+    <article class="card state-card"><div class="card-head"><h3 id="stateTitle">Estado registrado</h3><p>Se conserva la clasificación disponible en la fuente.</p></div><div id="stateChart"></div></article>
+    <article class="card operator-analytics operator-period-card"><div class="card-head"><h3>Compromisos vigentes por año contractual</h3><p>Periodos registrados, no años calendario.</p></div><div id="operatorPeriodChart"></div></article>
+    <article class="card operator-analytics operator-department-card"><div class="card-head"><h3>Departamentos: principales resultados</h3><p>Hasta cinco departamentos según la selección.</p></div><div id="operatorDepartmentChart" class="bar-chart"></div></article>
+    <article class="card map-card" id="mapCard"><div class="card-head map-head"><div><h3><span data-icon="map" aria-hidden="true"></span>Distribución geográfica</h3><p id="mapSubtitle">Todos los registros filtrados, independientemente de la tabla.</p></div><div class="map-actions"><button id="expandMap" class="link" aria-pressed="false"><span data-icon="map" aria-hidden="true"></span>Ampliar</button><button id="fitMap" class="link"><span data-icon="pin" aria-hidden="true"></span>Centrar</button></div></div><div id="mapCounters" class="map-counters" role="status"></div><div id="map"><div class="map-placeholder">Inicia sesión para consultar las coordenadas del detalle.</div></div><div id="mapLegend" class="map-operator-legend"></div><small id="mapNote" class="map-note"></small></article>
    </section>
    <section class="card detail-card">
     <div class="detail-head"><div><h3 id="detailTitle">Detalle</h3><p id="detailDescription"></p></div><div id="detailMode" class="segmented compact" hidden><button data-detail="commitments" class="active">Compromisos</button><button data-detail="segments">Segmentos</button></div></div>
@@ -48,7 +57,7 @@
    </section>
    <details class="card breakdown"><summary>Distribución territorial y por periodo</summary><div class="secondary-grid"><div><h3>Por departamento</h3><div id="departmentChart" class="bar-chart"></div></div><div><h3 id="periodTitle">Por periodo contractual</h3><div id="periodChart" class="bar-chart"></div></div></div></details>
   </div>
-  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 3.1 · Iconos SVG · Supabase</span></footer>
+  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 3.2 · Operadores y mapa completo · Supabase</span></footer>
  </main>
 </div>
 <dialog id="loginDialog"><form id="loginForm" class="dialog-body"><div class="dialog-head"><h2><span data-icon="lock" aria-hidden="true"></span>Acceso al detalle</h2><button type="button" class="btn close-dialog" aria-label="Cerrar"><span data-icon="close" aria-hidden="true"></span></button></div><p>Ingresa tu usuario autorizado y la contraseña de esta aplicación. No uses las credenciales de PostgreSQL, GitHub o Render.</p><label for="username">Usuario</label><div class="input-with-icon"><span data-icon="user" aria-hidden="true"></span><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="DGIC" maxlength="254" required></div><label for="password">Contraseña</label><div class="input-with-icon password-field"><span data-icon="lock" aria-hidden="true"></span><input id="password" name="password" type="password" autocomplete="current-password" required><button type="button" id="togglePassword" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false"><span data-icon="eye" aria-hidden="true"></span></button></div><label class="remember"><input type="checkbox" id="remember">Conservar la sesión en esta pestaña</label><small>En un equipo compartido, deja esta casilla desmarcada y cierra sesión al terminar.</small><p id="loginError" class="login-error" role="alert"></p><button class="btn primary" id="submitLogin"><span data-icon="lock" aria-hidden="true"></span>Entrar</button></form></dialog>
@@ -58,6 +67,9 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="./config.js"></script>
 <script src="./ui-branding.js?v=3.1"></script>
-<script src="./ui-v3.1.js?v=3.1"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="./operator-view.js?v=3.2"></script>
+<script src="./map-complete.js?v=3.2"></script>
+<script src="./ui-v3.2.js?v=3.2"></script>
 </body>
 </html>
