@@ -1,0 +1,17 @@
+/* Ajustes limitados al nuevo módulo; los estilos anteriores permanecen intactos. */
+.project-tab[data-source="3.5 GHz - 5G (Entidades)"]{min-width:225px}
+.anexo2-control{margin:0 0 14px;border-left:3px solid #2474cd}
+.anexo2-control summary{font-size:12px;font-weight:700;cursor:pointer;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.anexo2-quality{font-size:10px;font-weight:600;color:#865b08;background:#fff5df;border-radius:5px;padding:3px 7px}
+.anexo2-control-body{display:grid;gap:9px;padding-top:13px;font-size:11px;color:var(--ink)}
+.anexo2-control-body p{line-height:1.6;overflow-wrap:anywhere}
+.anexo2-totals{display:flex;gap:8px;flex-wrap:wrap}
+.anexo2-totals>span{background:#eff5fd;padding:7px 9px;border-radius:5px;font-size:10px}
+.anexo2-caption{color:var(--muted);font-size:10px}
+.anexo2-control-body>.btn{justify-self:start}
+.anexo2-control .table-wrap{max-height:340px;margin-top:10px}
+.anexo2-5g-mode .kpi-label{line-height:1.4}
+.operator-mode.anexo2-5g-mode .kpis{grid-template-columns:repeat(5,minmax(0,1fr))}
+.anexo2-feature-version{margin-left:8px;color:var(--blue);font-weight:650}
+@media(max-width:1200px){.operator-mode.anexo2-5g-mode .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.operator-mode.anexo2-5g-mode .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.anexo2-feature-version{margin-left:0;display:block}}
