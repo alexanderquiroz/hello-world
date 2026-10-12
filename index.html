@@ -11,9 +11,9 @@
 <link rel="stylesheet" href="./anexo2-5g.css?v=1">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="./territorial-v4.css?v=4.0.0">
+<link rel="stylesheet" href="./reference-v5.css?v=5.0.0">
 </head>
-<body class="territorial-v4">
+<body class="reference-v5">
 <a class="skip" href="#main">Ir al contenido</a>
 <header class="topbar">
  <div class="brand"><div class="brand-icon" data-icon="antenna" aria-hidden="true"></div><div><h1>Dashboard de Compromisos DGIC</h1><p>Seguimiento de compromisos de telecomunicaciones · Proyecto académico</p></div></div>
@@ -59,7 +59,7 @@
    </section>
    <details class="card breakdown"><summary>Distribución territorial y por periodo</summary><div class="secondary-grid"><div><h3>Por departamento</h3><div id="departmentChart" class="bar-chart"></div></div><div><h3 id="periodTitle">Por periodo contractual</h3><div id="periodChart" class="bar-chart"></div></div></div></details>
   </div>
-  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 4.0 · Diseño territorial · Supabase</span><span class="anexo2-feature-version">5G Entidades · v1</span></footer>
+  <footer>La evidencia reportada no equivale a conformidad contractual. Los cambios de localidad no reducen por sí mismos la obligación. Los años contractuales no son años calendario. <span class="version">Interfaz 5.0 · Referencia territorial · Supabase</span><span class="anexo2-feature-version">5G Entidades · v1</span></footer>
  </main>
 </div>
 <dialog id="loginDialog"><form id="loginForm" class="dialog-body"><div class="dialog-head"><h2><span data-icon="lock" aria-hidden="true"></span>Acceso al detalle</h2><button type="button" class="btn close-dialog" aria-label="Cerrar"><span data-icon="close" aria-hidden="true"></span></button></div><p>Ingresa tu usuario autorizado y la contraseña de esta aplicación. No uses las credenciales de PostgreSQL, GitHub o Render.</p><label for="username">Usuario</label><div class="input-with-icon"><span data-icon="user" aria-hidden="true"></span><input id="username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="DGIC" maxlength="254" required></div><label for="password">Contraseña</label><div class="input-with-icon password-field"><span data-icon="lock" aria-hidden="true"></span><input id="password" name="password" type="password" autocomplete="current-password" required><button type="button" id="togglePassword" class="password-toggle" aria-label="Mostrar contraseña" aria-pressed="false"><span data-icon="eye" aria-hidden="true"></span></button></div><label class="remember"><input type="checkbox" id="remember">Conservar la sesión en esta pestaña</label><small>En un equipo compartido, deja esta casilla desmarcada y cierra sesión al terminar.</small><p id="loginError" class="login-error" role="alert"></p><button class="btn primary" id="submitLogin"><span data-icon="lock" aria-hidden="true"></span>Entrar</button></form></dialog>
@@ -71,9 +71,10 @@
 <script src="./ui-branding.js?v=3.1"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="./operator-view.js?v=3.2"></script>
-<script src="./map-complete.js?v=3.2"></script>
+<script src="./map-reference-v5.js?v=5.0.0"></script>
 <script src="./anexo2-5g.js?v=1"></script>
-<script src="./territorial-v4.js?v=4.0.0"></script>
+<script src="./reference-v5.js?v=5.0.0"></script>
+<script src="./reference-controls-v5.js?v=5.0.0"></script>
 <script src="./ui-v3.4.js?v=5g-1"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="./excel-export.js?v=3.3"></script>
