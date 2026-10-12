@@ -6,6 +6,9 @@
   document.body.dataset.territorialReady = 'true';
   document.body.classList.add('territorial-v4');
   const icon = name => window.DGIC_UI?.icon(name) || '';
+  const badgeStyle=document.createElement('style');
+  badgeStyle.textContent='.territorial-v4 .filter-selection-count::before{content:attr(data-label)}';
+  document.head.append(badgeStyle);
   const grid = document.querySelector('.visual-grid');
   const side = document.querySelector('.sidebar');
   side.id = 'territorialFilters';
@@ -32,6 +35,7 @@
   function mirrorDepartments() {
     const rows = [...departmentSource.querySelectorAll(':scope > .bar-row')];
     departmentTarget.replaceChildren();
+    rows.sort((a,b) => parseFloat(b.querySelector('.bar-fill')?.style.width || '0') - parseFloat(a.querySelector('.bar-fill')?.style.width || '0'));
     if (rows.length) rows.slice(0, 5).forEach(row => departmentTarget.append(row.cloneNode(true)));
     else departmentTarget.textContent = departmentSource.textContent || 'Esperando la consulta.';
     $('territorialDeptNote').textContent = 'Hasta cinco departamentos · misma unidad y selección del resumen.';
@@ -49,7 +53,9 @@
       let badge = summary.querySelector('.filter-selection-count');
       if (!badge) { badge=document.createElement('span');badge.className='filter-selection-count';summary.append(badge); }
       const value = count === boxes.length && boxes.length ? 'Todos' : count + ' / ' + boxes.length;
-      if (badge.textContent !== value) badge.textContent = value;
+      // El contador no contamina la etiqueta que se exporta a Excel.
+      badge.dataset.label = value;
+      badge.setAttribute('aria-label', value);
       badge.title = 'Opciones marcadas. Usa Aplicar filtros para consultar.';
     });
   }
@@ -72,6 +78,8 @@
   toggle.onclick=()=>{mobileOpen=!mobileOpen;showFilters();};
   side.before(toggle);
   mobile.addEventListener('change',showFilters);showFilters();
+  $('applyFilters').addEventListener('click',()=>{if(mobile.matches){mobileOpen=false;showFilters();}});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mobile.matches&&mobileOpen&&!$('loginDialog').open&&!$('recordDialog').open){mobileOpen=false;showFilters();toggle.focus();}});
 
   const legendButton=document.createElement('button');
   legendButton.type='button';legendButton.className='link';legendButton.id='territorialLegend';
@@ -92,5 +100,5 @@
     lastWidth=rect.width;lastHeight=rect.height;
     cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>window.DGIC_MAP?.resize());
   }).observe($('map'));
-  document.querySelector('.version').textContent='Interfaz 4.0 · Diseño territorial · Supabase';
+  document.querySelector('.version').textContent='Interfaz 4.0.1 · Diseño territorial · Supabase';
 })();
