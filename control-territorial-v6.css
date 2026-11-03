@@ -1,0 +1,12 @@
+@import url('./control-territorial-base-v6.css?v=6.0.0');
+body.reference-v5 .topbar .btn.inverse{color:#fff;border-color:#8da8af;background:transparent}
+body.reference-v5 .topbar .btn.inverse:hover{background:#254a55}
+body.reference-v5 .topbar .btn.inverse svg{color:inherit}
+body.reference-v5 .filter-group summary{display:flex;flex-direction:column;align-items:stretch;gap:5px;list-style:none}
+body.reference-v5 .filter-group summary::after{display:none}
+body.reference-v5 .filter-select-display{display:block;position:relative;padding:8px 26px;min-height:34px}
+body.reference-v5 .state-card .donut-layout{grid-template-columns:minmax(120px,145px) minmax(0,1fr);gap:12px}
+body.reference-v5 .state-card .donut{max-width:145px;max-height:145px}
+body.reference-v5 .detail-card .toolbar{position:static;grid-column:auto;display:flex;width:100%;max-width:100%;padding:0}
+@media(max-width:1200px){body.reference-v5 .state-card .donut-layout{display:flex;flex-direction:column;align-items:stretch}body.reference-v5 .state-card .donut{align-self:center}}
+@media print{body.reference-v5 .sidebar,body.reference-v5 .topbar-right,body.reference-v5 .toolbar,body.reference-v5 .pager{display:none}body.reference-v5 .layout{display:block}body.reference-v5 .table-wrap{max-height:none;overflow:visible}body.reference-v5 .detail-card{break-before:page}}
