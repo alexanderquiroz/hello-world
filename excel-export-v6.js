@@ -11,7 +11,7 @@ function message(t,error=false){$('exportStatus').textContent=t;if(error){$('err
 function save(bytes,name,type){const url=URL.createObjectURL(new Blob([bytes],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 async function reconciliation(){try{const cfg=window.DGIC_CONFIG;const r=await fetch(cfg.SUPABASE_URL+'/rest/v1/rpc/dashboard_5g_control',{method:'POST',headers:{apikey:cfg.SUPABASE_PUBLISHABLE_KEY,'Content-Type':'application/json'},body:'{}'});if(!r.ok)return null;return await r.json();}catch(_){return null;}}
 async function download(mode,format){
- if(busy||detailBusy){message('Se está completando una consulta. Vuelve a pulsar cuando finalice.');return;}
+ if(busy){message('Ya se está generando un reporte.');return;}
  busy=true;app.setExportBusy(true);document.querySelectorAll('[data-am-export]').forEach(b=>b.disabled=true);
  try{
   const api=await engine();message('Recuperando los registros del alcance elegido…');
@@ -24,7 +24,9 @@ async function download(mode,format){
    message(`Ayuda memoria: ${m.c.length} CCPP, ${m.segments.length} segmentos y ${m.a.length} asignaciones 5G. No incluye otros proyectos.`);
   }else{
    if(!window.ExcelJS)throw new Error('No se cargó ExcelJS. Recarga la página.');
-   const wb=api.buildWorkbook(payload),bytes=await wb.xlsx.writeBuffer();
+   const wb=api.buildWorkbook(payload);
+   for(const spec of api.sheets(api.model(payload))){const ws=wb.getWorksheet(spec.name);spec.rows.forEach((rr,i)=>{const lines=Math.max(1,...rr.map((v,j)=>Math.ceil(String(v??'').length/(spec.widths[j]*.90))));ws.getRow(i+5).height=Math.max(ws.getRow(i+5).height||0,lines*11+10);});}
+   const bytes=await wb.xlsx.writeBuffer();
    if(stamp!==JSON.stringify(app.context())||$('detailArea').hidden)throw new Error('Cambió la consulta o la sesión. No se descargó el archivo.');
    save(bytes,'DGIC_Reporte_'+tag+'_'+date+'.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');message('Excel preparado. Hojas imprimibles separadas por componente; sin las columnas internas de la base.');
   }
